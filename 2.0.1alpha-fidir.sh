@@ -153,7 +153,7 @@ display_files_by_last_modified() {
 
 
 # Display menu
-echo "File Viewer with Filters"
+echo "=== FiDir - File Sort with Filters ==="
 echo "1. Display files and directories by size"
 echo "2. Display files by file type"
 echo "3. Sort files/directories by date created"
