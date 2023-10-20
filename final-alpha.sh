@@ -40,8 +40,9 @@ filter-menu(){
     while true; do
         echo "=================================================="
         echo "1. Filter with file type"
-        echo "2. Back"
-        echo "3. exit"
+        echo "2. Filter by permission"
+        echo "3. Back"
+        echo "4. exit"
         echo "=================================================="
         read -p "Enter your choice: " fchoice
         clear
@@ -49,9 +50,12 @@ filter-menu(){
             1)  read -p "Enter the file type: " file_type
                 list_files "$file_type"
                 ;;
-            2)  main-menu
+            2)  read -p "Enter permission name (eg. write): " perm
+                list_files_by_permission $perm
                 ;;
-            3)  exit 0
+            3)  main-menu
+                ;;
+            4)  exit 0
                 ;;
             *)
                 echo "Invalid choice. Please select a valid option."
@@ -203,6 +207,42 @@ list_files() {
         done
     else
         echo "No $file_type files found in the directory."
+    fi
+}
+
+list_files_by_permission() {
+    local permission_name="$1"
+    
+    if [ "$permission_name" == "read" -o "$permission_name" == "r" ]; then
+        permission_name="readable"
+        permission="r"
+    elif [ "$permission_name" == "write" -o "$permission_name" == "w" ]; then
+        permission="w"
+        permission_name="writable"
+    elif [ "$permission_name" == "execute" -o "$permission_name" == "x" ]; then
+        permission="x"
+        permissin_name="executable"
+    else
+        echo "Invalid permission name. Please use 'read', 'write', or 'execute'."
+        return
+    fi
+    
+    local files=($(find $path -type f -name "*"))
+    
+    if [ ${#files[@]} -gt 0 ]; then
+        echo "====================== $permission_name files  ======================"
+        echo "Size           Date (Last Modified)          File/Dir Name"
+        echo "-------------------------------------------------------------"
+        
+        for file in "${files[@]}"; do
+            if [ -$permission "$file" ]; then
+                file_date=$(stat -c "%y" "$file")
+                file_size=$(du -sh "$file" | cut -f1)
+                echo -e "$file_size\t\t${file_date%% *}\t\t$file"
+            fi
+        done
+    else
+        echo "No ${permission_name^}able files found in the directory."
     fi
 }
 
