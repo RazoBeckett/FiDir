@@ -26,7 +26,7 @@ sort-menu(){
                 ;;
             4)  display_files_by_last_modified
                 ;;
-            5)  start
+            5)  main-menu
                 ;;
             *)  echo "Invalid choice. Please try again."
                 ;;
@@ -49,7 +49,7 @@ filter-menu(){
             1)  read -p "Enter the file type: " file_type
                 list_files "$file_type"
                 ;;
-            2)  start
+            2)  main-menu
                 ;;
             3)  exit 0
                 ;;
@@ -63,13 +63,27 @@ filter-menu(){
 ## MAIN MENU
 main-menu(){
     clear
-    echo "=== FiDir - File Sort with Filters ==="
-    echo "1. Sort and display"
-    echo "2. Filter and display"
-    echo "3. exit"
-    echo "======================================="
-    read -p "Enter your choice: " choice
-    clear
+    while true; do
+        echo "==== FiDir - File Sort with Filters ===="
+        echo "1. Sort and display"
+        echo "2. Filter and display"
+        echo "3. exit"
+        echo "========================================"
+        read -p "Enter your choice: " choice
+        clear
+            case $choice in
+                1)  sort-menu
+                    ;;
+                2)  filter-menu
+                    ;;
+                3)  exit 0
+                    ;;
+                *)  echo "Invalid choice, try agin... "
+                    sleep 2
+                    clear
+                    ;;
+            esac
+    done
 }
 
 
@@ -114,21 +128,21 @@ display_files_by_type() {
   local file_types=("jpg|jpeg|png|gif|bmp" "mp4|avi|mkv|mov" "txt" "sh")
   
   for type in "${file_types[@]}"; do
-    files=($(find . -maxdepth 1 -type f -name "*.$type"))
+    files=($(find $path -maxdepth 1 -type f -name "*.$type"))
     if [ ${#files[@]} -gt 0 ]; then
-      echo "========================= ${type^^} Files ========================"
+      echo "========================= ${type^^} Files ========================="
       echo "Size           Date (Last Modified)          File/Dir Name"
       echo "-------------------------------------------------------------"
       for file in "${files[@]}"; do
         file_date=$(stat -c "%y" "$file")
         file_size=$(du -sh "$file" | cut -f1)
-        echo -e "$file_size\t${file_date%% *}  $file"
+        echo -e "$file_size\t\t${file_date%% *}\t\t$file"
       done
     fi
   done
 
   # Handle other file types
-  other_files=($(find . -maxdepth 1 -type f -not -name "*.*"))
+  other_files=($(find $path -maxdepth 1 -type f -not -name "*.*"))
   if [ ${#other_files[@]} -gt 0 ]; then
     echo "======================== Other Files ========================"
     echo "Size           Date (Last Modified)          File/Dir Name"
@@ -177,7 +191,7 @@ display_files_by_last_modified() {
 # Function to list files of a specific type
 list_files() {
     local file_type="$1"
-    local files=($(find . -type f -name "*.$file_type"))
+    local files=($(find $path -type f -name "*.$file_type"))
     if [ ${#files[@]} -gt 0 ]; then
         echo "======================= $file_type Files ======================="
         echo "Size           Date (Last Modified)          File/Dir Name"
@@ -194,22 +208,4 @@ list_files() {
 
 ########################## FILTER FUCNTIONS SECTION - EHD ##########################
 
-start(){
-    while true; do
-        main-menu
-        case $choice in
-            1)  sort-menu
-                ;;
-            2)  filter-menu
-                ;;
-            3)  exit 0
-                ;;
-            *)  echo "Invalid choice, try agin... "
-                sleep 2
-                clear
-                ;;
-        esac
-    done
-}
-
-start
+main-menu
