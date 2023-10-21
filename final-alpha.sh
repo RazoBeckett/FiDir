@@ -4,6 +4,32 @@ cd "$path" || exit 1
 
 # MENUS SECTION
 
+## MAIN MENU
+main-menu(){
+    clear
+    while true; do
+        echo "==== FiDir - File Sort with Filters ===="
+        echo "1. Sort and display"
+        echo "2. Filter and display"
+        echo "3. exit"
+        echo "========================================"
+        read -p "Enter your choice: " choice
+        clear
+            case $choice in
+                1)  sort-menu
+                    ;;
+                2)  filter-menu
+                    ;;
+                3)  exit 0
+                    ;;
+                *)  echo "Invalid choice, try agin... "
+                    sleep 2
+                    clear
+                    ;;
+            esac
+    done
+}
+
 ## SORT MENU
 sort-menu(){
     clear
@@ -64,31 +90,6 @@ filter-menu(){
     done
 }
 
-## MAIN MENU
-main-menu(){
-    clear
-    while true; do
-        echo "==== FiDir - File Sort with Filters ===="
-        echo "1. Sort and display"
-        echo "2. Filter and display"
-        echo "3. exit"
-        echo "========================================"
-        read -p "Enter your choice: " choice
-        clear
-            case $choice in
-                1)  sort-menu
-                    ;;
-                2)  filter-menu
-                    ;;
-                3)  exit 0
-                    ;;
-                *)  echo "Invalid choice, try agin... "
-                    sleep 2
-                    clear
-                    ;;
-            esac
-    done
-}
 
 
 ########################## SORT FUNCTIONS SECTION - START ##########################
@@ -221,13 +222,13 @@ list_files_by_permission() {
         permission_name="writable"
     elif [ "$permission_name" == "execute" -o "$permission_name" == "x" ]; then
         permission="x"
-        permissin_name="executable"
+        permission_name="executable"
     else
         echo "Invalid permission name. Please use 'read', 'write', or 'execute'."
         return
     fi
     
-    local files=($(find $path -type f -name "*"))
+    local files=($(find $path -maxdepth 1 -type f -name "*"))
     
     if [ ${#files[@]} -gt 0 ]; then
         echo "====================== $permission_name files  ======================"
@@ -247,5 +248,4 @@ list_files_by_permission() {
 }
 
 ########################## FILTER FUCNTIONS SECTION - EHD ##########################
-
 main-menu
