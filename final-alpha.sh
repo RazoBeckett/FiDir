@@ -198,7 +198,7 @@ list_files() {
     local files=($(find $path -type f -name "*.$file_type"))
     if [ ${#files[@]} -gt 0 ]; then
         echo "======================= $file_type Files ======================="
-        echo "Size           Date (Last Modified)          File/Dir Name"
+        echo "Size           Date (Last Modified)          File Name"
         echo "-------------------------------------------------------------"
         for file in "${files[@]}"; do
             file_date=$(stat -c "%y" "$file")
@@ -231,7 +231,7 @@ list_files_by_permission() {
     
     if [ ${#files[@]} -gt 0 ]; then
         echo "====================== $permission_name files  ======================"
-        echo "Size           Date (Last Modified)          File/Dir Name"
+        echo "Size           Date (Last Modified)          File Name"
         echo "-------------------------------------------------------------"
         
         for file in "${files[@]}"; do
