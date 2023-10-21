@@ -40,6 +40,7 @@ sort-menu(){
         echo "3. Sort files/directories by date created"
         echo "4. List files/directories by last modified date"
         echo "5. Back"
+        echo "6. Exit"
         echo "=================================================="
         read -p "Enter your choice: " schoice
         clear
@@ -53,6 +54,8 @@ sort-menu(){
             4)  display_files_by_last_modified
                 ;;
             5)  main-menu
+                ;;
+            6)  exit 0
                 ;;
             *)  echo "Invalid choice. Please try again."
                 ;;
@@ -90,17 +93,14 @@ filter-menu(){
     done
 }
 
-
-
 ########################## SORT FUNCTIONS SECTION - START ##########################
 
 # Function to display files and directories by size using du command
 display_files_by_size() {
   echo "Sort by Size:"
-  echo "1. Sort from big to small size"
-  echo "2. Sort from small to big size"
-  echo "Enter your choice: "
-  read -r sort_choice
+  echo "1. Sort from large to small size"
+  echo "2. Sort from small to large size"
+  read -p "Enter your choice: " sort_choice
 
   if [ "$sort_choice" = "1" ]; then
     sort_option="-k 1,1hr"
