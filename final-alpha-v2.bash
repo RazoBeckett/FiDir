@@ -167,7 +167,7 @@ display_files_by_date_created() {
   echo "-------------------------------------------------------------"
   for file in *; do
     if [ -f "$file" ] || [ -d "$file" ]; then
-      file_date=$(stat -c "%y" "$file")
+      file_date=$(stat -c "%w" "$file")
       file_size=$(du -sh "$file" | cut -f1)
       printf "%-16s %-20s %s\n" "$file_size" "${file_date%% *}" "$file"
     fi
